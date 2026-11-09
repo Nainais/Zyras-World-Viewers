@@ -1,0 +1,30 @@
+name: Build Zyras World Viewer (Windows)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust stable
+        run: rustup update stable --no-self-update
+      - name: Build viewer
+        shell: pwsh
+        run: cargo build --release --locked -p aurora-viewer --features xr-static-loader
+      - name: Package personal viewer
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path Zyras-World-Viewer | Out-Null
+          Copy-Item target/release/aurora-viewer.exe Zyras-World-Viewer/Zyras-World-Viewer.exe
+          Copy-Item LICENSE Zyras-World-Viewer/LICENSE
+          Copy-Item NOTICE.md Zyras-World-Viewer/NOTICE.md
+          Compress-Archive -Path Zyras-World-Viewer -DestinationPath Zyras-World-Viewer-Windows.zip
+      - name: Downloadable Windows ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: Zyras-World-Viewer-Windows
+          path: Zyras-World-Viewer-Windows.zip
+          if-no-files-found: error
