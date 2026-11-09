@@ -23,7 +23,7 @@ jobs:
           Copy-Item NOTICE.md Zyras-World-Viewer/NOTICE.md
           Compress-Archive -Path Zyras-World-Viewer -DestinationPath Zyras-World-Viewer-Windows.zip
       - name: Downloadable Windows ZIP
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Zyras-World-Viewer-Windows
           path: Zyras-World-Viewer-Windows.zip
